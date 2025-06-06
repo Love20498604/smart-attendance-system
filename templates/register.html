@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='register_style.css') }}">
+
+
+</head>
+<body>
+    <header>
+        <h1>Register for SMART ATTENDENCE</h1>
+    </header>
+
+    <main>
+        <div class="register-container">
+
+            <form id="register-form">
+
+                <div class="form-feilds">
+
+                    <input type="text" placeholder="First Name" required/>
+                    <input type="text" placeholder="Last Name" required/>
+                    <input type="Email" placeholder="Email" required/>
+                    <input type="text" placeholder="Username" required/>
+                    <input type="password" placeholder="Password" required/>
+            
+                </div>
+
+                <div class="photo capture">
+
+                    <button type="button" onclick="captureImage()">Capture face Image</button>
+                    <p id="captureStatus"></p>   
+                    
+                
+                </div>
+                <button class="register-button" type="submit">Register</button>
+            </form>
+
+        </div>
+    </main>
+
+    <footer>
+        <p >Already have an account ? <a href="login.html">Login here</a> </p>
+    </footer>
+
+    <script>
+        function captureImage() {
+            const captureStatus = document.getElementById("captureStatus");
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            captureStatus.textContent = `Image captured: face_${timestamp}.png`;
+        }
+    </script>
+    
+</body>
+</html>

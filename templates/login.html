@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login_style.css') }}">
+
+</head>
+<body>
+    <header>
+        <h1>LOGIN TO SMART ATTENDANCE</h1>
+    </header>
+
+    <main>
+        <div class="login-container">
+            <form>
+                <input type="text" placeholder="Username" required/>
+                <input type="text" placeholder="PASSWORD" required/>
+                <button type="submit" >Login</button>
+            </form>
+        </div>
+        
+    </main>
+
+</body>
+</html>

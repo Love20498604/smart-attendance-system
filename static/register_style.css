@@ -1,0 +1,75 @@
+/* Header */
+header {
+    padding: 40px 10px;
+    background-color:  rgb(6, 43, 76);
+    color: white;
+    text-align: center;
+  }
+  
+ 
+  
+  /* Form container */
+  .register-container {
+    max-width: 500px;
+    margin: 60px auto;
+    padding: 40px ;
+    background-color: #f9f9f9;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Input fields */
+  form input {
+
+    width: 90%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #0a72b2;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+  
+  /* Buttons */
+  form button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #0a4f7c;
+    color: white;
+    cursor: pointer;
+    transition: background-color 1s ease;
+  }
+  
+  form button:hover {
+    background-color: #06375a;
+  }
+  
+  /* Capture button on the right side */
+  form button[type="button"] {
+    background-color: #28a745;
+    margin-top: 10px;
+  }
+  
+  form button[type="button"]:hover {
+    background-color: #1e7e34;
+  }
+  
+  /* Capture status message */
+  #captureStatus {
+    margin-top: 10px;
+    font-style: italic;
+    color: #333;
+    text-align: center;
+  }
+  
+  /* Footer */
+  footer {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 14px;
+  }
+  
