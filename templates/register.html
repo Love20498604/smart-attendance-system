@@ -1,58 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Register</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='register_style.css') }}">
-
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='register_style.css') }}">
+  <style>
+    video, canvas {
+      display: block;
+      margin: 10px auto;
+    }
+    #overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 640px;
+      height: 480px;
+      border: 2px solid red;
+      box-sizing: border-box;
+      margin: 0 auto;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .camera-container {
+      position: relative;
+      width: 640px;
+      height: 480px;
+      margin: auto;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Register for SMART ATTENDENCE</h1>
-    </header>
 
-    <main>
-        <div class="register-container">
+<header>
+  <h1>Register for SMART ATTENDANCE</h1>
+</header>
 
-            <form id="register-form">
+<main>
+  <div class="register-container">
 
-                <div class="form-feilds">
+    <form id="register-form" method="POST" action="/register">
 
-                    <input type="text" placeholder="First Name" required/>
-                    <input type="text" placeholder="Last Name" required/>
-                    <input type="Email" placeholder="Email" required/>
-                    <input type="text" placeholder="Username" required/>
-                    <input type="password" placeholder="Password" required/>
-            
-                </div>
+      <div class="form-fields">
 
-                <div class="photo capture">
+        <input type="text" name="first_name" placeholder="First Name" required/>
+        <input type="text" name="last_name" placeholder="Last Name" required/>
+        <input type="email" name="email" placeholder="Email" required/>
+        
+      </div>
 
-                    <button type="button" onclick="captureImage()">Capture face Image</button>
-                    <p id="captureStatus"></p>   
-                    
-                
-                </div>
-                <button class="register-button" type="submit">Register</button>
-            </form>
+      <div class="camera-container">
 
-        </div>
-    </main>
+        <video id="video" width="640" height="480" autoplay></video>
+        <div id="overlay"></div>
+        <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
+        <input type="hidden" name="image_data" id="image_data">
 
-    <footer>
-        <p >Already have an account ? <a href="login.html">Login here</a> </p>
-    </footer>
+      </div>
 
-    <script>
-        function captureImage() {
-            const captureStatus = document.getElementById("captureStatus");
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            captureStatus.textContent = `Image captured: face_${timestamp}.png`;
-        }
-    </script>
-    
+      <div class="photo-capture">
+        
+        <button type= "button" onclick="captureImage()" >Capture Face</button>
+
+        <p id="captureStatus"></p>
+
+      </div>
+
+      <button class="register-button" type="submit">Register</button>
+    </form>
+  </div>
+</main>
+
+<footer>
+  <p>Already have an account? <a href="login.html">Login here</a></p>
+</footer>
+
+<script>
+  // Access webcam
+  const video = document.getElementById('video');
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then((stream) => {
+      video.srcObject = stream;
+    })
+    .catch((err) => {
+      console.error("Camera not accessible:", err);
+      alert("Please allow camera access to use this feature.");
+    });
+
+  function captureImage() {
+    const canvas = document.getElementById('canvas');
+    canvas.width = 160;
+    canvas.height = 120;
+
+    const context = canvas.getContext('2d');
+    const captureStatus = document.getElementById("captureStatus");
+    const imageDataInput = document.getElementById("image_data");
+
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const imageData = canvas.toDataURL("image/png");
+    imageDataInput.value = imageData;
+    captureStatus.textContent = "Image captured and added to form!";
+  }
+</script>
+
 </body>
 </html>

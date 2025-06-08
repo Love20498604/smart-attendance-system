@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Face Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='login_style.css') }}">
-
 </head>
 <body>
     <header>
@@ -14,14 +13,45 @@
 
     <main>
         <div class="login-container">
-            <form>
-                <input type="text" placeholder="Username" required/>
-                <input type="text" placeholder="PASSWORD" required/>
-                <button type="submit" >Login</button>
+            <form method="POST" action="/login" enctype="multipart/form-data">
+                <div class="photo-capture">
+                    <video id="video" width="320" height="240" autoplay></video>
+                    <button type="button" id="snap">Capture Face</button>
+                    <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+                    <img id="captured-image" alt="Captured Image" style="display:none; margin-top:10px;" />
+                    <input type="hidden" name="captured_image" id="captured_image_input" />
+                </div>
+
+                <button type="submit">Login</button>
             </form>
         </div>
-        
     </main>
+
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const snapBtn = document.getElementById('snap');
+    const capturedImage = document.getElementById('captured-image');
+    const capturedImageInput = document.getElementById('captured_image_input');
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then((stream) => {
+            video.srcObject = stream;
+        })
+        .catch((err) => {
+            alert('Error accessing webcam: ' + err);
+        });
+
+    snapBtn.addEventListener('click', () => {
+        const context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageDataURL = canvas.toDataURL('image/png');
+
+        capturedImage.src = imageDataURL;
+        capturedImage.style.display = 'block';
+        capturedImageInput.value = imageDataURL;
+    });
+</script>
 
 </body>
 </html>
