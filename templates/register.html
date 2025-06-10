@@ -46,16 +46,18 @@
         <input type="text" name="first_name" placeholder="First Name" required/>
         <input type="text" name="last_name" placeholder="Last Name" required/>
         <input type="email" name="email" placeholder="Email" required/>
-        
+        <input type="'hidden" name="image_data" id="image_data">
       </div>
 
       <div class="camera-container">
 
         <video id="video" width="640" height="480" autoplay></video>
         <div id="overlay"></div>
-        <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
-        <input type="hidden" name="image_data" id="image_data">
 
+      </div>
+
+      <div id="preview-container" style= "text-align: center; margin-top: 10px;">
+            <canvas id="canvas" width="640" height="480" style="display:none; border: 2px solid#ccc;"></canvas>
       </div>
 
       <div class="photo-capture">
@@ -72,7 +74,8 @@
 </main>
 
 <footer>
-  <p>Already have an account? <a href="login.html">Login here</a></p>
+  <p>
+    Already have an account? <a href="{{ url_for('login_page') }}">Login</a></p>
 </footer>
 
 <script>
@@ -89,13 +92,13 @@
 
   function captureImage() {
     const canvas = document.getElementById('canvas');
-    canvas.width = 160;
-    canvas.height = 120;
-
     const context = canvas.getContext('2d');
     const captureStatus = document.getElementById("captureStatus");
     const imageDataInput = document.getElementById("image_data");
 
+    canvas.width=320;
+    canvas.height=240;
+    canvas.style.display='block' ;
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
     const imageData = canvas.toDataURL("image/png");
     imageDataInput.value = imageData;

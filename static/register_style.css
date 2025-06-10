@@ -8,7 +8,7 @@ header {
 
   /* Form container */
   .register-container {
-    max-width: 500px;
+    max-width: 640px;
     margin: 60px auto;
     padding: 40px ;
     background-color: #f9f9f9;
@@ -70,4 +70,6 @@ header {
     margin-top: 40px;
     font-size: 14px;
   }
-  
+  #canvas{
+    margin-bottom: 20px;
+  }
