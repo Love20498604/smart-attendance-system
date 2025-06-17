@@ -1,22 +1,100 @@
 /* Header */
+body{
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
 header {
+    display: flex;
     padding: 40px 10px;
-    background-color:  rgb(6, 43, 76);
+    background-color:  rgb(0, 0, 0);
     color: white;
     text-align: center;
   }
 
-  /* Form container */
+.title{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-left: 10px;
+  font-size: 25px;
+}
+.navbar{
+  display:flex;
+  align-items: center;
+  text-align: center;
+  gap: 40px;
+  margin-left: 400px;
+}
+
+.btn{
+  display: inline-block;
+  padding: 10px 30px;
+  background-color: #000000;
+  color: white;
+  text-decoration: none;
+  border-radius: 15px;
+  /* transition: background-color 0.3s ease; */
+  font-size: 40px;
+}
+.btn:hover{
+  background-color: #1f74b2;
+}
+.main-split{
+  display: flex;
+  gap: 20px;
+
+  }
   .register-container {
+    flex: 1;
     max-width: 640px;
     margin: 60px auto;
     padding: 40px ;
-    background-color: #f9f9f9;
+    background-color: #b4c6da;
     border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
   
-  /* Input fields */
+  .main-right-half{
+    margin: 60px auto;
+    flex: 1;
+    text-align: center;
+    font-size: 40px;
+    background-color: #b4c6da;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    padding: 12px 15px;
+    border-radius: 20px;
+  }
+
+  .main-right-half thead{
+    
+    background-color: #82b5ec;
+    color: white;
+   
+   
+    
+    
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+ 
+  th, td {
+    text-align: left;
+    border: 1px solid;
+    padding: 12px 24px; 
+    
+  }
+  tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
   form input {
 
     width: 90%;
@@ -24,16 +102,16 @@ header {
     margin: 10px 0;
     border: 1px solid #0a72b2;
     border-radius: 8px;
-    font-size: 16px;
+    font-size: 25px;
   }
   
-  /* Buttons */
+
   form button {
     display: block;
     width: 100%;
     padding: 12px;
     margin-top: 15px;
-    font-size: 16px;
+    font-size: 30px;
     border: none;
     border-radius: 8px;
     background-color: #0a4f7c;
@@ -44,31 +122,35 @@ header {
   
   form button:hover {
     background-color: #06375a;
+    
   }
   
   /* Capture button on the right side */
   form button[type="button"] {
     background-color: #28a745;
     margin-top: 10px;
+    font-size: 25px;
   }
   
   form button[type="button"]:hover {
     background-color: #1e7e34;
   }
   
-  /* Capture status message */
+
   #captureStatus {
     margin-top: 10px;
     font-style: italic;
     color: #333;
     text-align: center;
+    
   }
   
   /* Footer */
   footer {
     text-align: center;
-    margin-top: 40px;
-    font-size: 14px;
+    font-size: 30px;
+    text-align: left;
+    margin-left: 100px;
   }
   #canvas{
     margin-bottom: 20px;

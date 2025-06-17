@@ -1,5 +1,3 @@
-first_name,last_name,email,image_file,encoded_file
-lovepreet,singh,24bn19@queensu.ca,static/images/lovepreet_singh_face.png,encodings/lovepreet_singh.npy
-qq,22,v@gmail.com,static/images/qq_22_face.png,encodings/qq_22.npy
-nav,s,v@gmail.com,static/images/nav_s_face.png,encodings/nav_s.npy
-lovepreet,singh,24bn19@queensu.ca,static/images/lovepreet_singh_face.png,encodings/lovepreet_singh.npy
+first_name,last_name,email,image_file,encoded_file,Date,Time
+lovepreet,singh,24bn19@queensu.ca,static/images/lovepreet_singh_face.png,encodings/lovepreet_singh.npy,2025-06-13,10-17-26
+adeep,singh,adeeprandhawa29@gmail.com,static/images/adeep_singh_face.png,encodings/adeep_singh.npy,2025-06-15,17-21-00

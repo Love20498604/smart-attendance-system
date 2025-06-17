@@ -33,10 +33,25 @@
 <body>
 
 <header>
-  <h1>Register for SMART ATTENDANCE</h1>
+
+  <div class="title">
+    <a href="#" ><img src="{{url_for('static' , filename='icon/c.png')}}" alt="image" width="50" height="50"></a>
+    <h1>REGISTRATION</h1>
+    
+  </div>
+  
+  <div class="navbar">
+    
+    <a href="{{url_for('home_page') }}" class="btn">Home</a>
+    <a href="contact" class="btn">Contact</a>
+    <a href="Attendance" class="btn">Attendance</a>
+    <a href="About" class="btn">About</a>
+  </div>
+    
 </header>
 
-<main>
+<main class="main-split">
+
   <div class="register-container">
 
     <form id="register-form" method="POST" action="/register">
@@ -46,7 +61,7 @@
         <input type="text" name="first_name" placeholder="First Name" required/>
         <input type="text" name="last_name" placeholder="Last Name" required/>
         <input type="email" name="email" placeholder="Email" required/>
-        <input type="'hidden" name="image_data" id="image_data">
+        <input type="hidden" name="image_data" id="image_data">
       </div>
 
       <div class="camera-container">
@@ -71,15 +86,51 @@
       <button class="register-button" type="submit">Register</button>
     </form>
   </div>
+
+  <div class="main-right-half">
+    
+      <h2>Registered Users</h2>
+      
+      <table >
+        <thead>
+          <tr>
+            <td>Reg. #</td>
+            <td>First Name </td>
+            <td>Last Name </td>
+            <td>Email </td>
+            <td>Date</td>
+            <td>Time</td>
+
+          </tr>
+
+        </thead>
+        <tbody>
+          {% for user in users%}
+          <tr>
+            <td>{{loop.index}}</td>
+            <td>{{user.first_name}}</td>
+            <td>{{user.last_name}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.Date}}</td>
+            <td>{{user.Time}}</td>
+          </tr>
+          {%endfor %}
+        </tbody>
+      </table>
+    
+      
+
+  </div>
+    
 </main>
 
 <footer>
-  <p>
-    Already have an account? <a href="{{ url_for('login_page') }}">Login</a></p>
+  <p> Already registered ? <a href="{{ url_for('login_page') }}" class="btn"> Attendance</a></p>
 </footer>
 
 <script>
-  // Access webcam
+  // Access webcam 
+
   const video = document.getElementById('video');
   navigator.mediaDevices.getUserMedia({ video: true })
     .then((stream) => {

@@ -8,23 +8,84 @@
 </head>
 <body>
     <header>
-        <h1>LOGIN TO SMART ATTENDANCE</h1>
+        <div class="title">
+            <h1>LOGIN TO SMART ATTENDANCE</h1>
+        </div>
+
+        <div class="navbar">
+            <div class="navbar-left">
+
+                <a href="{{url_for('home_page')}}" class="btn" >Home</a>
+                <a href="{{url_for('register_page')}}" class="btn">Register</a>
+                <a href="{{url_for('teacher_login')}}" class="btn" >Teacher Dashboard</a>
+
+            </div>
+
+            <div class="navbar-right">
+
+                {%if teacher_name%}
+                <div class="avatar-container">
+                    <span >{{ teacher_name[:2].upper() }}</span>
+                    <a href="{{url_for('new_home_page')}}" class="btn">Sign Out</a>
+                 
+                {% endif%}
+                </div>
+
+                  
+                
+            </div>
+        </div>
+        
     </header>
 
     <main>
-        <div class="login-container">
-            <form method="POST" action="/login" enctype="multipart/form-data">
-                <div class="photo-capture">
-                    <video id="video" width="320" height="240" autoplay></video>
-                    <button type="button" id="snap">Capture Face</button>
-                    <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
-                    <img id="captured-image" alt="Captured Image" style="display:none; margin-top:10px;" />
-                    <input type="hidden" name="captured_image" id="captured_image_input" />
-                </div>
-
-                <button type="submit">Login</button>
-            </form>
+        <div class="main-half-left">
+            <div class="login-container">
+                <form method="POST" action="/login" enctype="multipart/form-data">
+                    <div class="photo-capture">
+                        <video id="video" width="640" height="480" autoplay></video>
+                        <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+                        <img id="captured-image" alt="Captured Image" style="display:none; margin-top:10px;" />
+                        <input type="hidden" name="captured_image" id="captured_image_input" />
+                    </div>
+                    
+                    <div class="button-signs">
+                        <button type="button" id="snap"  class="button">Capture Face</button>
+                        <button type="submit" class="button">Login</button>
+                </form>
+                    </div>
+                    
+            </div>
         </div>
+
+
+        <div class="main-half-right">
+            <div class="title1">
+                <h1>Attendance</h1>
+            </div>
+            
+            <table class="attendance-log">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in login_logs %}
+                <tr>
+                  <td>{{ row.name }}</td>
+                  <td>{{ row.date }}</td>
+                  <td>{{ row.time }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          
+
+            
 
          
     </main>
@@ -45,9 +106,10 @@
         });
 
     snapBtn.addEventListener('click', () => {
+        
         const context = canvas.getContext('2d');
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const imageDataURL = canvas.toDataURL('image/png');
+        const imageDataURL = canvas.toDataURL('image/jpeg', 0.6);
 
         capturedImage.src = imageDataURL;
         capturedImage.style.display = 'block';

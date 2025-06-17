@@ -6,16 +6,93 @@
   <title>Smart Attendance</title>
   <link rel="stylesheet" href="{{ url_for('static' , filename='main_page_style.css')}}">
 </head>
+
 <body>
+  
+  
   <header>
-    <h1>SMART ATTENDANCE SYSTEM</h1>
-    <p>Effortless attendance with face recognition</p>
+
+    
+  <div class="title">
+    <a href="#" ><img src="{{url_for('static' , filename='icon/c.png')}}" alt="image" width="50" height="50"></a>
+    <h1>SMART</h1>
+    <h1>ATTENDANCE</h1>
+    
+  </div>
+  
+    <div class="navbar">
+
+        <ul class="navbar-left">
+          <a href="{{ url_for('home_page') }}" class="btn">Home</a> 
+          <!-- <a href="Attendance" class="btn">Attendance</a>   i will save this button for checking all the attendece including login logs -->
+          <a href="{{url_for('register_page')}}" class="reg_btn">Register</a>
+          <a href="{{ url_for('teacher_login') }}" class="btn">Teacher Dashboard</a>
+          <a href="About" class="btn">About</a>
+
+        </ul>
+
+        <div class="navbar-right">
+          {%if teacher_name%}
+          <div class="avatar-container">
+            <div class="avatar-circle">
+              {% if teacher_name %}
+              <span >{{ teacher_name[:2].upper() }}</span>
+              
+              {% endif %}
+            </div>
+
+            <a href="{{url_for('new_home_page')}}" class="btn">Sign Out</a>
+  
+          {% endif%}
+            
+
+          </div>
+            
+
+        </div>
+
+        
+    </div>
   </header>
 
-  <main>
+  <main class="split-main">
+      
+        <div class="main-left">
+
+            <div class="heading-container">
+                <h2 class="heading1">SMART</h2>
+                <h2 class="heading2">ATTENDANCE</h2>
+                <h2 class="heading3">SYSTEM</h2>
+            </div>
+
+            <section class="intro">
+              <p>
+                Revolutionizing classroom management with face recognition technology.<br>
+                Our AI-powered system helps teachers take real-time, accurate attendance with just one camera – no hassle, no paperwork.<br>
+                Whether you're managing a small group or multiple classes, Smart Attendance offers a seamless experience for both teachers and students.
+              </p>
+              <p>
+                Get started by logging in or registering your class today.
+              </p>
+
+            </section>
+
+            <div class="start-buttons">
+              {% if teacher_name %}
+                <a href="{{url_for('login_page')}}" class='btn'>Take Attendance</a>
+              {% else %}
+                <a href="{{url_for('teacher_login')}}" class="reg_btn">Get Started</a>
+              {% endif %}
+            </div>
+        </div>
+
+    <div class="main-right">
+      <img src="{{url_for('static' , filename='icon/background.jpg')}}" alt="background-photo">
+    </div>
+
     
-    <a href="{{url_for('login_page')}}" class="btn">Login</a>
-    <a href="{{url_for('register_page')}}" class="reg_btn">Register</a>
+    
+    
 
   </main>
 

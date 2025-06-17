@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color: red; font-weight: bold;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <header>
+        <h1>Welcome to Teacher Dashboard</h1>
+        <h2>Teacher login</h2>
+    </header>
+        
+    <main>
+       <form method="POST" action="{{url_for('teacher_login_page')}}">
+            <input name="Name" type="text" placeholder="Enter username" required>
+            <input name="Password" type="password" placeholder="Enter password" required>
+            <button type="submit">Login</button>
+       </form>
+    </main>
+</body>
+</html>
