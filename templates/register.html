@@ -4,31 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Register</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='register_style.css') }}">
-  <style>
-    video, canvas {
-      display: block;
-      margin: 10px auto;
-    }
-    #overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 640px;
-      height: 480px;
-      border: 2px solid red;
-      box-sizing: border-box;
-      margin: 0 auto;
-      z-index: 10;
-      pointer-events: none;
-    }
-    .camera-container {
-      position: relative;
-      width: 640px;
-      height: 480px;
-      margin: auto;
-    }
-  </style>
+ 
 </head>
 <body>
 
@@ -41,11 +19,17 @@
   </div>
   
   <div class="navbar">
-    
-    <a href="{{url_for('home_page') }}" class="btn">Home</a>
-    <a href="contact" class="btn">Contact</a>
-    <a href="Attendance" class="btn">Attendance</a>
-    <a href="About" class="btn">About</a>
+
+    <ul class="navbar-left">
+      <a href="{{url_for('home_page') }}" class="btn">Home</a>
+      <a href="contact" class="btn">Contact</a>
+      <a href="{{url_for('login_page')}}" class="btn">Attendance</a>
+      <a href="About" class="btn">About</a>
+    </ul>
+   
+    <div class="navbar-right">
+      <a href="{{url_for('new_home_page')}}" class="btn">Sign out</a>
+    </div>
   </div>
     
 </header>

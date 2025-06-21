@@ -4,39 +4,46 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Face Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='login_style.css') }}">
 </head>
 <body>
     <header>
         <div class="title">
-            <h1>LOGIN TO SMART ATTENDANCE</h1>
-        </div>
-
-        <div class="navbar">
-            <div class="navbar-left">
-
-                <a href="{{url_for('home_page')}}" class="btn" >Home</a>
-                <a href="{{url_for('register_page')}}" class="btn">Register</a>
-                <a href="{{url_for('teacher_login')}}" class="btn" >Teacher Dashboard</a>
-
-            </div>
-
-            <div class="navbar-right">
-
-                {%if teacher_name%}
-                <div class="avatar-container">
-                    <span >{{ teacher_name[:2].upper() }}</span>
-                    <a href="{{url_for('new_home_page')}}" class="btn">Sign Out</a>
-                 
-                {% endif%}
-                </div>
-
-                  
-                
-            </div>
+          <a href="#" ><img src="{{url_for('static' , filename='icon/c.png')}}" alt="image" width="50" height="50"></a>
+          <h1>SMART ATTENDANCE</h1>
+          
         </div>
         
-    </header>
+        <div class="navbar">
+      
+              <ul class="navbar-left">
+                <a href="{{ url_for('home_page') }}" class="btn">Home</a> 
+                <!-- <a href="Attendance" class="btn">Attendance</a>   i will save this button for checking all the attendece including login logs -->
+                <a href="{{url_for('register_page')}}" class="btn">Register</a>
+                <a href="{{ url_for('teacher_login') }}" class="btn">Teacher Dashboard</a>
+                <!-- <a href="About" class="btn">About</a> -->
+      
+              </ul>
+      
+              <div class="navbar-right">
+                {%if teacher_name%}
+                <div class="avatar-container">
+                  
+      
+                  <a href="{{url_for('new_home_page')}}" class="btn">Sign Out</a>
+        
+                {% endif%}
+                  
+      
+                </div>
+                  
+      
+              </div>
+      
+              
+          </div>
+        </header>
 
     <main>
         <div class="main-half-left">
@@ -47,6 +54,12 @@
                         <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
                         <img id="captured-image" alt="Captured Image" style="display:none; margin-top:10px;" />
                         <input type="hidden" name="captured_image" id="captured_image_input" />
+                        {% if error %}
+                        <div style="color: red; font-weight: bold; margin-bottom: 20px;">
+                            {{ error }}
+                        </div>
+                        {% endif %}
+                        
                     </div>
                     
                     <div class="button-signs">
@@ -67,6 +80,7 @@
             <table class="attendance-log">
               <thead>
                 <tr>
+                  <th>Entry No.</th>
                   <th>Name</th>
                   <th>Date</th>
                   <th>Time</th>
@@ -75,6 +89,7 @@
               <tbody>
                 {% for row in login_logs %}
                 <tr>
+                    <td>{{loop.index}}</td>
                   <td>{{ row.name }}</td>
                   <td>{{ row.date }}</td>
                   <td>{{ row.time }}</td>
@@ -96,13 +111,15 @@
     const snapBtn = document.getElementById('snap');
     const capturedImage = document.getElementById('captured-image');
     const capturedImageInput = document.getElementById('captured_image_input');
+    const errorMessage=document.getElementById('error-message');
 
-    navigator.mediaDevices.getUserMedia({ video: true })
+    // this would help in accessing the webcam
+    navigator.mediaDevices.getUserMedia({ video: true }) 
         .then((stream) => {
             video.srcObject = stream;
         })
         .catch((err) => {
-            alert('Error accessing webcam: ' + err);
+            alert('Error accessing webcam: ' + err.message);
         });
 
     snapBtn.addEventListener('click', () => {
@@ -111,9 +128,15 @@
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         const imageDataURL = canvas.toDataURL('image/jpeg', 0.6);
 
+
+        if (!imageDataURL || imageDataURL.length < 1000) {
+            errorMessage.textContent = "No face detected. Please ensure you're visible to the camera.";
+            return;
+        }
         capturedImage.src = imageDataURL;
         capturedImage.style.display = 'block';
         capturedImageInput.value = imageDataURL;
+        errorMessage.textContent = "";
     });
 </script>
 

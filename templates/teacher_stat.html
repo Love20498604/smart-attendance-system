@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{url_for('static' , filename='teacher_stat.css')}}">
+
+</head>
+<body>
+    <header>
+       <div class="head-container">
+        <div class="title">
+            <h1>Welcome to Teacher Dashboard</h1>
+        </div>
+
+        <div class="navbar">
+
+                <div class="left-navbar">
+                    <a href="{{url_for('home_page')}}" class="btn">Home</a>
+                    <a href="{{url_for('register_page')}}" class="btn">Register</a>
+                    <a href="{{url_for('login_page')}}" class="btn">Attendance</a>
+                </div>
+    
+                <div class="right-navbar">
+                    <a href="{{url_for('new_home_page')}}" class="btn" >Sign out</a>
+                </div>  
+    
+        </div>
+       </div>
+                
+    </header>
+    <main>
+            <div class="upper-main">
+    
+                <div class="main-upper-L">
+                    <h2>Total registration</h2>
+                    <p>{{ total_registered }}</p>
+                </div>
+    
+                <div class="main-upper-R">
+                    <h2>Total attendance</h2>
+                   <p> {{total_present}} </p> 
+                </div>
+            </div>
+    
+        
+        
+        <div class="lower-main">
+            <table >
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Time</th>
+
+                    </tr>
+
+                </thead>
+                
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ log.name }}</td>
+                        <td>{{ log.date }}</td>
+                        <td>{{ log.time }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+          
+    </main>
+</body>
+</html>

@@ -1,41 +1,67 @@
 /* Header */
-body{
+body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  font-family: Arial, sans-serif;
 }
+
 header {
-    display: flex;
-    padding: 40px 10px;
-    background-color:  rgb(0, 0, 0);
-    color: white;
-    text-align: center;
-  }
+    font-family: 'Poppins', sans-serif;
+  display: flex;
+  padding: 30px 10px;
+  background-color: rgb(255, 255, 255);
+  color: white;
+  
+}
 
 .title{
+  font-family: 'Poppins', sans-serif;
+  color: #000000;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
   margin-left: 10px;
   font-size: 25px;
 }
-.navbar{
-  display:flex;
+
+
+.navbar {
+  font-family: 'Poppins', sans-serif;
+  display: flex;
   align-items: center;
-  text-align: center;
-  gap: 40px;
-  margin-left: 400px;
+  font-size: 20px;
+  justify-content: center;
+  border-radius: 10px;
 }
 
-.btn{
+.navbar-left {
+ 
+  display: flex;
+  align-items: center;
+  margin-left: 490px;
+  gap: 1.5rem;
+ 
+  
+}
+.navbar-right {
+  display: flex;
+  margin-left: 650px;
+  align-items:center;
+
+
+}.btn{
   display: inline-block;
-  padding: 10px 30px;
-  background-color: #000000;
-  color: white;
-  text-decoration: none;
-  border-radius: 15px;
-  /* transition: background-color 0.3s ease; */
-  font-size: 40px;
+    padding: 12px 40px;
+    background-color: #000000;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-size: 20px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2)
 }
 .btn:hover{
   background-color: #1f74b2;
@@ -48,27 +74,34 @@ header {
   .register-container {
     flex: 1;
     max-width: 640px;
-    margin: 60px auto;
-    padding: 40px ;
-    background-color: #b4c6da;
+    margin-left: 20px;
+    margin-top: 50px;
+    /* margin: 60px auto; */
+    padding: 50px ;
+    background-color: #ddf5fa;
     border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
   
   .main-right-half{
-    margin: 60px auto;
+    margin-top: 50px;
+
     flex: 1;
     text-align: center;
     font-size: 40px;
-    background-color: #b4c6da;
+    background-color: #ddf5fa;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     padding: 12px 15px;
     border-radius: 20px;
   }
+  .main-right-half h2{
+    font-size: 40px;
+    font-family: 'Poppins', sans-serif;
+  }
 
   .main-right-half thead{
     
-    background-color: #82b5ec;
+    background-color:  #6798d0;
     color: white;
    
    
@@ -154,4 +187,26 @@ header {
   }
   #canvas{
     margin-bottom: 20px;
+  }
+  video, canvas {
+    display: block;
+    margin: 10px auto;
+  }
+  #overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 640px;
+    height: 480px;
+    border: 2px solid red;
+    box-sizing: border-box;
+    margin: 0 auto;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .camera-container {
+    position: relative;
+    width: 640px;
+    height: 480px;
+    margin: auto;
   }

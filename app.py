@@ -18,16 +18,45 @@ app.config['MAX_CONTENT_LENGTH'] = 32 * 1024 * 1024
 
 app.secret_key = 'key_123'
 
+
+def count_total_registered_students():
+    with open("users.csv" , "r") as user_file:
+        lines=user_file.readlines()
+        return len(lines)-1
+
+def count_total_present_students():
+    with open('login_logs.csv' , 'r') as file:
+        files=file.readlines()
+        return len(files)-1
+
+def load_recent_logs(limit=10):
+    logs = []
+    with open("login_logs.csv", newline='') as f:
+        reader = list(csv.DictReader(f))
+
+        for row in reversed(reader[-limit:]): 
+            logs.append({
+                'name': row['name'],
+                'date': row['date'],
+                'time': row['time'],
+                'status': 'Present'
+            })
+    return logs
+
+
+
 @app.route('/')
 @app.route('/home')
 def home_page():
     teacher_name=session.get("teacher_name")
     return render_template('index.html' , teacher_name=teacher_name)
 
+
 @app.route('/Sign Out')
 def new_home_page():
     session.clear()
-    return redirect(url_for('home_page'))
+    return render_template('index.html')
+
 
 @app.route('/Get Started')
 @app.route('/teacher_dashboard')
@@ -35,8 +64,16 @@ def teacher_login():
     teacher_name=session.get("teacher_name")
     if 'teacher_name' not in session:
         flash("Please sign in as a teacher to begin registering your students and taking attendance.")
-        return render_template('teacher_dashboard.html')
-    return f"you are already signed as {teacher_name}"
+        return render_template('teacher_dashboard.html' )
+    
+
+
+    return render_template('teacher_stat.html' ,
+            teacher_name=teacher_name, 
+            total_registered=count_total_registered_students(),
+            total_present=count_total_present_students(),
+            logs=load_recent_logs(limit=10)
+            )
 
 
 
@@ -46,10 +83,15 @@ def teacher_login_page():
     admin_password=request.form.get("Password")
     if admin_name=='123' and admin_password=='123' :
         session['teacher_name']=admin_name
-        return redirect(url_for("home_page") )
+        return render_template("teacher_stat.html" ,
+            total_registered=count_total_registered_students(),
+            total_present=count_total_present_students(), 
+            logs=load_recent_logs(limit=10) )
     else:
         flash("Wrong Teacher id or password")
         return render_template('teacher_dashboard.html')
+
+
 
 @app.route('/Attendance')
 @app.route('/Take Attendance')
@@ -61,75 +103,80 @@ def login_page():
         reader=csv.DictReader(read_file)
         login_logs=list(reader)
     return render_template('login.html' , login_logs=login_logs , teacher_name=session['teacher_name'] )
-    
+     
     
  
 
 
-@app.route('/login' , methods=["POST"])
+
+@app.route('/login', methods=["POST"])
 def login():
-    
-        image_data=request.form.get("captured_image")
-        if not image_data:
-            return "No image recieved. Please try again."
-        
-        try:
+    login_logs = []
+    if os.path.exists('login_logs.csv'):
+        with open('login_logs.csv', 'r') as f:
+            reader = csv.DictReader(f)
+            login_logs = list(reader)
 
-            header , encoded=image_data.split(",", 1)
-            image_byte=base64.b64decode(encoded)
-        except Exception as e :
-            return f"Error decoding image: {str(e)}"
-        
-        nparr = np.frombuffer(image_byte, np.uint8)
-        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)   # decode numpy vector array into image matrix form
+    image_data = request.form.get("captured_image")
 
-        if img is None:
-            return "error decoding image."
-        
-        rgb_img = cv2.cvtColor(img , cv2.COLOR_BGR2RGB)
+    if not image_data:
+        return render_template("login.html", error="No image received. Please try again.", login_logs=login_logs)
 
-        face_locations=face_recognition.face_locations(rgb_img)
+    try:
+        header, encoded = image_data.split(",", 1)
+        image_byte = base64.b64decode(encoded)
+    except Exception as e:
+        return render_template("login.html", error=f"Error decoding image: {str(e)}", login_logs=login_logs)
 
-        if not face_locations:
-            return "NO face detected."
-        
-        face_encodings=face_recognition.face_encodings(rgb_img , face_locations)
-        
-        if not face_encodings:
-            return "could not extract face encoding."
-        
-        current_encoding=face_encodings[0]
+    nparr = np.frombuffer(image_byte, np.uint8)
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-        encoding_dir= "encodings"
-        matched_user =None
+    if img is None:
+        return render_template("login.html", error="Error decoding image.", login_logs=login_logs)
 
-        for file in os.listdir(encoding_dir):
-            if file.endswith('.npy'):
-                saved_encoding = np.load(os.path.join(encoding_dir, file))[0]
-                match = face_recognition.compare_faces([saved_encoding], current_encoding, tolerance=0.5)
-                if match[0]:
-                    matched_user = file.replace(".npy", "")
-                    
-        now=datetime.now()
-        date=now.strftime("%Y-%m-%d")
-        time=now.strftime("%H-%M-%S")
-        fieldnames=['name' , "date",  "time"]
-        if matched_user:
-            with open("login_logs.csv", "a", newline='') as file:
-                writer = csv.DictWriter(file, fieldnames=fieldnames)
-                # write header if file is new
-                if file.tell() == 0:
-                    writer.writeheader()
-                writer.writerow({
-                    "name": matched_user,
-                    "date": date,
-                    "time": time
-                })
+    rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-            flash("No matching face found. Please try again or register first.") 
-            return redirect(url_for('login_page'))
-        
-    
+    face_locations = face_recognition.face_locations(rgb_img)
+
+    if not face_locations:
+        return render_template("login.html", error="No Face Detected. Please try again.", login_logs=login_logs)
+
+    face_encodings = face_recognition.face_encodings(rgb_img, face_locations)
+
+    if not face_encodings:
+        return render_template("login.html", error="Could not extract face encoding.", login_logs=login_logs)
+
+    current_encoding = face_encodings[0]
+
+    encoding_dir = "encodings"
+    matched_user = None
+
+    for file in os.listdir(encoding_dir):
+        if file.endswith('.npy'):
+            saved_encoding = np.load(os.path.join(encoding_dir, file))[0]
+            match = face_recognition.compare_faces([saved_encoding], current_encoding, tolerance=0.5)
+            if match[0]:
+                matched_user = file.replace(".npy", "")
+                break
+
+    now = datetime.now()
+    date = now.strftime("%Y-%m-%d")
+    time = now.strftime("%H-%M-%S")
+    fieldnames = ['name', "date", "time"]
+
+    if matched_user:
+        with open("login_logs.csv", "a", newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            if file.tell() == 0:
+                writer.writeheader()
+            writer.writerow({
+                "name": matched_user,
+                "date": date,
+                "time": time
+            })
+        return redirect(url_for("login_page"))
+    else:
+        return render_template("login.html", error="No matching face found. Please try again or register first.", login_logs=login_logs)
 
 
 @app.route('/register', methods=['GET'])

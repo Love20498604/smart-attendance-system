@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Dashboard</title>
+    <link rel="stylesheet" href="{{url_for('static' , filename='teacher_dashboard_style.css')}}">
 </head>
 <body>
     {% with messages = get_flashed_messages() %}
@@ -15,16 +16,26 @@
     {% endwith %}
 
     <header>
-        <h1>Welcome to Teacher Dashboard</h1>
-        <h2>Teacher login</h2>
+        <div class="title">
+            <h1>Welcome to Teacher Dashboard</h1>
+        </div>
+       
+        
     </header>
         
     <main>
-       <form method="POST" action="{{url_for('teacher_login_page')}}">
-            <input name="Name" type="text" placeholder="Enter username" required>
-            <input name="Password" type="password" placeholder="Enter password" required>
-            <button type="submit">Login</button>
-       </form>
+        <div class="form-container">
+            <div class="title1">
+                <p>Teacher Login</p>
+            </div>
+    
+            <form method="POST" action="{{url_for('teacher_login_page')}}">
+                <input name="Name" type="text" placeholder="Enter username" required>
+                <input name="Password" type="password" placeholder="Enter password" required>
+                <button type="submit">Login</button>
+            </form>
+        </div>
     </main>
+    
 </body>
 </html>
