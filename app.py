@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request,  url_for, jsonify , flash
-import csv
 import os
 import base64
 import cv2
@@ -10,38 +9,42 @@ from flask import redirect
 from datetime import datetime
 
 
+from database import db
+from database import Registered_User
+from database import LoginLog
+
+
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 32 * 1024 * 1024
-
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
+db.init_app(app)
 
 
 app.secret_key = 'key_123'
 
 
 def count_total_registered_students():
-    with open("users.csv" , "r") as user_file:
-        lines=user_file.readlines()
-        return len(lines)-1
+    return Registered_User.query.count()
 
 def count_total_present_students():
-    with open('login_logs.csv' , 'r') as file:
-        files=file.readlines()
-        return len(files)-1
+    return LoginLog.query.count()
 
 def load_recent_logs(limit=10):
-    logs = []
-    with open("login_logs.csv", newline='') as f:
-        reader = list(csv.DictReader(f))
-
-        for row in reversed(reader[-limit:]): 
-            logs.append({
-                'name': row['name'],
-                'date': row['date'],
-                'time': row['time'],
-                'status': 'Present'
-            })
+    recent_entries = LoginLog.query.order_by(LoginLog.id.desc()).limit(limit).all()
+    logs = [
+        {
+            'name': entry.name,
+            'date': entry.date,
+            'time': entry.time,
+            'status': 'Present'
+        }
+        for entry in recent_entries
+    ]
     return logs
+
+
 
 
 
@@ -66,14 +69,19 @@ def teacher_login():
         flash("Please sign in as a teacher to begin registering your students and taking attendance.")
         return render_template('teacher_dashboard.html' )
     
+    search_date = request.args.get('search_date', '').strip()
 
+    query = LoginLog.query
 
-    return render_template('teacher_stat.html' ,
-            teacher_name=teacher_name, 
-            total_registered=count_total_registered_students(),
-            total_present=count_total_present_students(),
-            logs=load_recent_logs(limit=10)
-            )
+    if search_date:
+        query = query.filter(LoginLog.date == search_date)
+    logs = query.order_by(LoginLog.id.desc()).limit(10).all()
+    return render_template('teacher_stat.html',
+                           teacher_name=teacher_name,
+                           total_registered=Registered_User.query.count(),
+                           total_present=LoginLog.query.count(),
+                           logs=logs)
+
 
 
 
@@ -97,26 +105,16 @@ def teacher_login_page():
 @app.route('/Take Attendance')
 def login_page():
     teacher_name=session['teacher_name']
-    login_logs=[]
-    if os.path.exists('login_logs.csv'):
-        read_file=open('login_logs.csv' , 'r')
-        reader=csv.DictReader(read_file)
-        login_logs=list(reader)
+    login_logs=LoginLog.query.order_by(LoginLog.id.desc()).limit(10).all()
+    
     return render_template('login.html' , login_logs=login_logs , teacher_name=session['teacher_name'] )
      
     
- 
-
-
 
 @app.route('/login', methods=["POST"])
 def login():
     login_logs = []
-    if os.path.exists('login_logs.csv'):
-        with open('login_logs.csv', 'r') as f:
-            reader = csv.DictReader(f)
-            login_logs = list(reader)
-
+    
     image_data = request.form.get("captured_image")
 
     if not image_data:
@@ -165,16 +163,10 @@ def login():
     fieldnames = ['name', "date", "time"]
 
     if matched_user:
-        with open("login_logs.csv", "a", newline='') as file:
-            writer = csv.DictWriter(file, fieldnames=fieldnames)
-            if file.tell() == 0:
-                writer.writeheader()
-            writer.writerow({
-                "name": matched_user,
-                "date": date,
-                "time": time
-            })
-        return redirect(url_for("login_page"))
+        log=LoginLog(name=matched_user , date=date , time=time)
+        db.session.add(log)
+        db.session.commit()
+        return redirect(url_for("login_page") )
     else:
         return render_template("login.html", error="No matching face found. Please try again or register first.", login_logs=login_logs)
 
@@ -183,16 +175,18 @@ def login():
 def register_page():
     users=[]
     
-    if 'teacher_name' in session:
+    if 'teacher_name' not in session:
 
-        if os.path.exists("users.csv"):
-            csv_file=open("users.csv" , "r")
-            reader=csv.DictReader(csv_file)
-            users=list(reader)        
-        return render_template('register.html' , users=users , teacher_name=session['teacher_name'])
+        flash("Please , Let a teacher sign in first to register new students and take attendance.")
+        return redirect(url_for('teacher_login'))
+    
+    search_date=request.args.get('search_date')
+    if search_date:
+        users=Registered_User.query.filter_by(date=search_date).all()
 
-    flash("Please , Let a teacher sign in first to register new students and take attendance.")
-    return redirect(url_for('teacher_login'))
+    else:
+        users=Registered_User.query.all()   
+    return render_template('register.html' , users=users , teacher_name=session['teacher_name'])
 
 
 @app.route('/register', methods=['POST'])
@@ -264,22 +258,18 @@ def register():
         with open(image_filename, 'wb') as f:
             f.write(image_bytes)
 
-        # Save user data and image filename to CSV
-        file_exists = os.path.isfile('users.csv')
-        with open('users.csv', 'a', newline='') as csvfile:
-            fieldnames = ['first_name', 'last_name', 'email', 'image_file' , "encoded_file", 'Date' , "Time"]
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            if not file_exists:
-                writer.writeheader()
-            writer.writerow({
-                'first_name': first_name,
-                'last_name': last_name,
-                'email': email,
-                'image_file': image_filename,
-                "encoded_file": encoding_path,
-                "Date": current_date,
-                'Time' : current_time
-            })
+        new_user=Registered_User(
+            first_name=first_name,
+            last_name=last_name,
+            email = email , 
+            image_file=image_filename , 
+            encoded_file=encoding_path, 
+            date=current_date, 
+            time= current_time
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
 
         return redirect(url_for("register_page"))
     

@@ -43,11 +43,22 @@
                    <p> {{total_present}} </p> 
                 </div>
             </div>
+        
     
-        
-        
         <div class="lower-main">
+
+            <form method="GET" action="{{ url_for('teacher_login') }}" class="search-form">
+                <label for="search_date">Search by Date:</label>
+                <input type="date" name="search_date" id="search_date" value="{{ request.args.get('search_date', '') }}">
+                <button type="submit">Search</button>
+              
+                {% if request.args.get('search_date') %}
+                  <a href="{{ url_for('teacher_login') }}" class="btn">Clear Search</a>
+                {% endif %}
+            </form>
+
             <table >
+
                 <thead>
                     <tr>
                         <th>#</th>
