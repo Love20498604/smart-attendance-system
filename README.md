@@ -3,12 +3,13 @@ This project allows teachers to register students and take attendance using faci
 
 
 ## Features
--  Webcam 
+-  Webcam registration
 -  Teacher dashboard with live logs
 -  Search students by date
 -  Face recognition for login
 
-![Demo](smart_attend/static/icon/demo_GIF.gif/to/demo.gif)
+
+![Demo](https://github.com/Love20498604/smart-attendence-system/raw/main/smart_attend/static/icon/demo_GIF.gif)
 
 
 ## Technology Used
