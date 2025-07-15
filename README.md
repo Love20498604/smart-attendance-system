@@ -9,7 +9,7 @@ This project allows teachers to register students and take attendance using faci
 -  Face recognition for login
 
 
-![Demo](https://github.com/Love20498604/smart-attendence-system/raw/main/smart_attend/static/icon/demo_GIF.gif)
+![Demo](demo_GIF.gif)
 
 
 ## Technology Used
