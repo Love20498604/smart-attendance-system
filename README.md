@@ -12,7 +12,7 @@ This project allows teachers to register students and take attendance using faci
 
 ## Demo
 
-![Demo](demo_GIF.gif)
+<img src="demo.gif" alt="Demo" width="800">
 ---
 
 ## Technology Used
