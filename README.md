@@ -1,16 +1,17 @@
-Smart Attend - Face Recognition Attendence System
+##Smart Attend - Face Recognition Attendence System
 This project allows teachers to register students and take attendance using facial recognition.
-
+---
 
 ## Features
 -  Webcam registration
 -  Teacher dashboard with live logs
 -  Search students by date
 -  Face recognition for login
+---
 
-
+##Demo
 ![Demo](demo_GIF.gif)
-
+---
 
 ## Technology Used
 
@@ -23,4 +24,4 @@ This project allows teachers to register students and take attendance using faci
 - HTML/CSS – Frontend structure and design
 - javaScript– For webcam access and image capture on frontend
 
-
+---
