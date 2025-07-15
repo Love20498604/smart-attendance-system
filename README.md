@@ -1,4 +1,4 @@
-##Smart Attend - Face Recognition Attendence System
+#Smart Attend - Face Recognition Attendence System
 This project allows teachers to register students and take attendance using facial recognition.
 ---
 
